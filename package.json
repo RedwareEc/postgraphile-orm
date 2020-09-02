@@ -1,0 +1,29 @@
+{
+  "name": "@redware/template-hapi-ts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "ts-node ./src/server",
+    "watch:ts": "tsc -p ./server -w",
+    "build": "yarn build:ts",
+    "build:ts": "tsc -p ./server"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "dependencies": {
+    "@hapi/glue": "^8.0.0",
+    "@hapi/hapi": "^20.0.0"
+  },
+  "devDependencies": {
+    "@types/hapi__glue": "^6.1.1",
+    "@types/hapi__hapi": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "eslint": "^7.8.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "nodemon": "^2.0.4",
+    "prettier": "^1.19.1",
+    "typescript": "~3.9.7"
+  }
+}
