@@ -3,18 +3,18 @@ module.exports = {
   env: {
     node: true,
   },
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   extends: [
-    "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint", // agrega las reglas de prettier a eslint
-    "plugin:prettier/recommended", // agregar el plugin que integra eslint con prettier
+    'plugin:@typescript-eslint/recommended',
+    'prettier/@typescript-eslint', // agrega las reglas de prettier a eslint
+    'plugin:prettier/recommended', // agregar el plugin que integra eslint con prettier
   ],
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: "module",
+    sourceType: 'module',
   },
   rules: {
-    "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },
 };
