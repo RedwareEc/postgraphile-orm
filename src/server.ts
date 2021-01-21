@@ -1,3 +1,4 @@
+import './env'
 import { init } from './app';
 
 const Console = console;

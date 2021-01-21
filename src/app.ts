@@ -1,13 +1,9 @@
-import Glue from '@hapi/glue';
-import manifest from './config/manifest';
+import Manifest from './manifest';
 
-const composeOptions = {
-  relativeTo: __dirname,
-};
 export const init = async () => {
   try {
-    const server = await Glue.compose(manifest, composeOptions);
-
+    const server = await Manifest.initManifest();
+    await Manifest.afterManifest(server);
     return server;
   } catch (err) {
     console.error(err);

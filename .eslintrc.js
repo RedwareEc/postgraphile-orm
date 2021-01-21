@@ -4,11 +4,7 @@ module.exports = {
     node: true,
   },
   parser: '@typescript-eslint/parser',
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint', // agrega las reglas de prettier a eslint
-    'plugin:prettier/recommended', // agregar el plugin que integra eslint con prettier
-  ],
+  extends: ['plugin:@typescript-eslint/recommended'],
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
