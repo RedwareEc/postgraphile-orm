@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsnd --respawn --files src/server.ts",
     "test": "jest",
-    "build": "tsc",
+    "build": "tsc -p ./tsconfig.build.json",
     "watch": "tsc -w"
   },
   "engines": {

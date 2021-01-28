@@ -7,12 +7,16 @@
     "strict": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "./dist",
     "baseUrl": ".",
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "types": ["types/index.d.ts"]
+    }
   },
-  "include": ["./**/*"]
+  "include": ["./**/*"],
+  "exclude": ["./test"]
 }

@@ -6,7 +6,7 @@ dotenv.config();
  * Define Schema
  */
 const env = {
-  NODE_ENV: Joi.string(),
+  NODE_ENV: Joi.string().default('development'),
   PORT: Joi.number().default(3015),
 };
 
