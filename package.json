@@ -12,6 +12,7 @@
     "node": ">=12.0.0"
   },
   "dependencies": {
+    "@hapi/boom": "^9.1.1",
     "@hapi/glue": "^8.0.0",
     "@hapi/hapi": "^20.0.3",
     "dotenv": "^8.2.0",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@types/hapi-pino": "^8.0.1",
+    "@types/hapi__boom": "^9.0.1",
     "@types/hapi__glue": "^6.1.3",
     "@types/hapi__hapi": "^20.0.4",
     "@types/jest": "^26.0.20",

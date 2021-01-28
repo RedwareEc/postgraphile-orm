@@ -1,11 +1,11 @@
 import Glue from '@hapi/glue';
 import { Server } from '@hapi/hapi';
 import { Manifest } from '@hapi/glue';
-import { Options } from './config';
+import * as Options from './config/options';
 
 const manifest: Manifest = {
   server: {
-    port: 3000,
+    port: process.env.PORT,
   },
   register: {
     plugins: [
