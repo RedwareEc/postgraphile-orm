@@ -1,17 +1,66 @@
-import { JobHelpers } from 'graphile-worker';
-import { SendMailOptions } from 'nodemailer';
-export interface SendEmailOptions {
-  theme?: string;
-  email: string;
-  template: string;
-  variables?: Record<string, unknown>;
-  extend?: SendMailOptions;
+export interface Names {
+  singular: {
+    upper: string;
+    lower: string;
+  };
+  plural: {
+    upper: string;
+    lower: string;
+  };
 }
-export type Task<P = unknown> = (
-  payload: P,
-  helpers: JobHelpers,
-) => void | Promise<void>;
+export interface Variables {
+  query: string;
+  model: string;
+}
+export interface EngineVariables {
+  variables: Variables;
+  name: Names;
+  prefix: string;
+  namespace: string;
+  custom?: Record<string, string>;
+}
 
-interface GlobalTest {
-  TEST_EMAILS: any[];
+interface SchemaPartial {
+  prefix: string;
+  variables: Record<string, any>;
+  template: string;
+  custom: { fragment?: string; [key: string]: string };
+}
+export interface OptionsBuild {
+  name: Names;
+  schema: SchemaPartial;
+  namespace: string;
+  fragment: string;
+  // custom?: Record<string, any>;
+}
+
+export interface Partial {
+  variables: string;
+  partial: string;
+  getFragment: (fragment?: string | undefined) => string;
+}
+export interface BuildQueryOptions {
+  id: symbol;
+  fragment?: string;
+  _extends?: {
+    variables?: string[];
+    fragments?: string[];
+    body?: string[];
+  };
+}
+interface OptionsQueryModel {
+  name: string;
+  primaryKeys: Record<string, string>;
+}
+
+export namespace Query {
+  export interface OptionsAll {
+    fragment?: string;
+    flat?: boolean;
+    extends?: {
+      variables?: string[];
+      fragments?: string[];
+      body?: string[];
+    };
+  }
 }
