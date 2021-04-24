@@ -1,3 +1,5 @@
+import { GraphQLClient, gql } from 'graphql-request';
+
 export interface Names {
   singular: {
     upper: string;
@@ -12,55 +14,63 @@ export interface Variables {
   query: string;
   model: string;
 }
-export interface EngineVariables {
-  variables: Variables;
-  name: Names;
-  prefix: string;
-  namespace: string;
-  custom?: Record<string, string>;
+
+interface Fragment {
+  query: string;
+  variables?: (namespace?: string) => Variables;
+}
+export interface ModelState {
+  fragments: Record<string, Fragment>;
 }
 
-interface SchemaPartial {
-  prefix: string;
-  variables: Record<string, any>;
-  template: string;
-  custom: { fragment?: string; [key: string]: string };
-}
-export interface OptionsBuild {
-  name: Names;
-  schema: SchemaPartial;
-  namespace: string;
-  fragment: string;
-  // custom?: Record<string, any>;
-}
+export type StoreModels = Record<string, ModelState>;
 
-export interface Partial {
-  variables: string;
-  partial: string;
-  getFragment: (fragment?: string | undefined) => string;
+export interface FindOptions {
+  first?: number;
+  offset?: number;
+  orderBy?: string[];
+  filter?: any;
+  condition?: any;
 }
-export interface BuildQueryOptions {
-  id: symbol;
+export interface QueryOptions {
+  variables?: Record<string, any>;
+  nameFragment?: string;
   fragment?: string;
-  _extends?: {
-    variables?: string[];
-    fragments?: string[];
-    body?: string[];
-  };
-}
-interface OptionsQueryModel {
-  name: string;
-  primaryKeys: Record<string, string>;
+  simpleList?: boolean;
 }
 
-export namespace Query {
-  export interface OptionsAll {
-    fragment?: string;
-    flat?: boolean;
-    extends?: {
-      variables?: string[];
-      fragments?: string[];
-      body?: string[];
-    };
-  }
+export interface GraphqlModel {
+  findAll: (find: FindOptions, options?: QueryOptions) => Promise<any>;
+  findOne: (find: FindOptions, options?: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
+  count: (find: FindOptions, options?: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
+  findBy: (
+    pks: Record<string, string | number>,
+    options?: Omit<QueryOptions, '_simpleList'>,
+  ) => Promise<any>;
+  findByPk: (pk: string | number, options?: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
+  create: (data: any, options?: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
+  updateByPk: (
+    pk: string | number,
+    data: any,
+    options?: Omit<QueryOptions, '_simpleList'>,
+  ) => Promise<any>;
+  updateBy: (
+    pks: Record<string, string | number>,
+    data: any,
+    options?: Omit<QueryOptions, '_simpleList'>,
+  ) => Promise<any>;
+  deleteByPk: (pk: string | number, options: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
+  deleteBy: (
+    pks: Record<string, string | number>,
+    options?: Omit<QueryOptions, '_simpleList'>,
+  ) => Promise<any>;
+  $request: (query: any, variables: anyi) => Promise<any>;
+  $addFragment: (
+    nameFragment: string,
+    fragment: { query: string; variables?: Record<string, string> },
+  ) => void;
+}
+
+export interface InstancePostgraphile {
+  defineModel: (nameModel: string, primaryKeys: Record<string, string>) => GraphqlModel;
 }

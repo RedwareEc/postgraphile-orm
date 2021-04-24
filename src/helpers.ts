@@ -1,5 +1,5 @@
 import { singular, plural } from 'pluralize';
-import { Names, Variables } from 'types';
+import { Names, Variables, ModelState } from 'types';
 
 export function capitalize(name: string) {
   return name.charAt(0).toUpperCase() + name.slice(1);
@@ -36,4 +36,45 @@ export const buildVariables = (
   }
   // model.push('}');
   return { query: _variables.join('\n'), model: model.join('\n') };
+};
+
+export const buildBy = (pks: Record<string, unknown>, omit?: string[]) => {
+  //
+  const by: string[] = [];
+
+  const variables: Record<string, string> = {};
+  const values: Record<string, any> = {};
+  for (const rawPk of Object.keys(pks)) {
+    const [pk, type] = rawPk.split(':');
+
+    if (omit) {
+      if (!omit.find((v) => v === pk)) {
+        //
+        by.push(capitalize(pk));
+      }
+    } else {
+      by.push(capitalize(pk));
+    }
+
+    const _type = type || typeof pks[pk] === 'string' ? 'String' : 'Int';
+    variables[pk] = _type.includes('!') ? _type : _type + '!';
+    values[pk] = pks[rawPk];
+  }
+  return { by: by.join('And'), variables: buildVariables(variables), values };
+};
+
+export const getFragment = (
+  model: ModelState,
+  names: Names,
+  primaryKey: string,
+  nameFragment?: string,
+) => {
+  //
+  const fragment = nameFragment ? model.fragments[nameFragment] : undefined;
+
+  const partials = {
+    body: fragment ? `...${names.singular.lower}_${nameFragment}` : primaryKey,
+    fragment: fragment ? fragment.query : '',
+  };
+  return partials;
 };
