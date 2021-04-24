@@ -56,7 +56,7 @@ export const buildBy = (pks: Record<string, unknown>, omit?: string[]) => {
       by.push(capitalize(pk));
     }
 
-    const _type = type || typeof pks[pk] === 'string' ? 'String' : 'Int';
+    const _type = type ? type : typeof pks[pk] === 'string' ? 'String' : 'Int';
     variables[pk] = _type.includes('!') ? _type : _type + '!';
     values[pk] = pks[rawPk];
   }

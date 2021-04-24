@@ -53,7 +53,9 @@ const findAll = ({ model, variables, names, client, primaryKey }: Ctx) => (
   }`;
 
   const gqlFragment = options.fragment
-    ? `fragment gql_body on ${names.singular.upper}${options.fragment}`
+    ? `fragment gql_body on ${
+        options.simpleList ? names.singular.upper : names.plural.upper + 'Connection'
+      }${options.fragment}`
     : '';
   const query = options.simpleList
     ? gql`query(
@@ -82,7 +84,7 @@ const findAll = ({ model, variables, names, client, primaryKey }: Ctx) => (
      ${partials.fragment}
      ${gqlFragment}
    `;
-  console.log(query);
+  // console.log(query);
 
   return client.request(query, { ...values, ...options.variables });
 };
@@ -96,7 +98,7 @@ const findBy = ({ model, variables, names, primaryKey, client }: Ctx) => (
 
   const query = gql`
     query(${variables.query}){
-      ${names.singular.lower}By${by}(${variables.model}) {
+      data:${names.singular.lower}By${by}(${variables.model}) {
         ${partials.body}
       }
     }
@@ -115,7 +117,7 @@ const mutationBy = ({ model, variables, names, primaryKey, client }: Ctx) => (
 
   const query = gql`
     mutation(${variables.query}){
-      ${mutation}${names.singular.upper}By${by}(input:{${variables.model}}) {
+      data:${mutation}${names.singular.upper}By${by}(input:{${variables.model}}) {
         doc:${names.singular.lower}{
           ${partials.body}
         }
@@ -134,7 +136,7 @@ const mutationCreate = ({ model, variables, names, primaryKey, client }: Ctx) =>
 
   const query = gql`
     mutation(${variables.query}){
-      create${names.singular.upper}(input:{${variables.model}}) {
+      data:create${names.singular.upper}(input:{${variables.model}}) {
         doc:${names.singular.lower}{
           ${partials.body}
         }
@@ -191,7 +193,7 @@ export function instancePostgraphile(url: string, options?: RequestInit): Instan
             ...values,
           },
         });
-        return r;
+        return r?.data?.doc;
       };
       const deleteBy = async (pks: Record<string, string | number>, options: QueryOptions = {}) => {
         const { by, variables, values } = buildBy({
@@ -204,17 +206,20 @@ export function instancePostgraphile(url: string, options?: RequestInit): Instan
             ...values,
           },
         });
-        return r;
+        return r?.data?.doc;
       };
       return {
-        findAll: findAll({
-          model,
-          names,
-          client,
-          variables: staticVariables.all,
-          primaryKey,
-        }),
-        findOne: async (values, options) => {
+        findAll: async (values, options) => {
+          const r = await findAll({
+            model,
+            names,
+            client,
+            variables: staticVariables.all,
+            primaryKey,
+          })(values, options);
+          return r?.data;
+        },
+        findOne: async (values = {}, options = {}) => {
           const r = await findAll({
             client,
             names,
@@ -231,9 +236,9 @@ export function instancePostgraphile(url: string, options?: RequestInit): Instan
               simpleList: true,
             },
           );
-          return r;
+          return r?.data?.[0];
         },
-        count: async (values, options) => {
+        count: async (values = {}, options = {}) => {
           const r = await findAll({
             client,
             names,
@@ -244,11 +249,11 @@ export function instancePostgraphile(url: string, options?: RequestInit): Instan
             ...options,
             fragment: gql`
               {
-                totalCount
+                total: totalCount
               }
             `,
           });
-          return r;
+          return r?.data;
         },
         findBy: async (pks, options = {}) => {
           const { by, variables, values } = buildBy(pks);
@@ -259,10 +264,12 @@ export function instancePostgraphile(url: string, options?: RequestInit): Instan
               ...values,
             },
           });
-          return r;
+          return r?.data;
         },
         findByPk: async (pk, options = {}) => {
           const { by, variables, values } = buildBy({ [`${primaryKey}:${primaryKeyType}`]: pk });
+          // console.log(variables, values);
+
           const r = await findBy({ model, names, primaryKey, client, variables })(by, {
             ...options,
             variables: {
@@ -270,7 +277,7 @@ export function instancePostgraphile(url: string, options?: RequestInit): Instan
               ...values,
             },
           });
-          return r;
+          return r?.data;
         },
         create: async (data, options) => {
           const variables = buildVariables({
@@ -282,7 +289,7 @@ export function instancePostgraphile(url: string, options?: RequestInit): Instan
               [names.singular.lower]: data,
             },
           });
-          return r;
+          return r?.data?.doc;
         },
         updateByPk: async (pk, data, options) => {
           const r = await updateBy(
@@ -297,7 +304,7 @@ export function instancePostgraphile(url: string, options?: RequestInit): Instan
         },
         updateBy,
         deleteByPk: async (pk, options) => {
-          await deleteBy(
+          return await deleteBy(
             {
               [`${primaryKey}:${primaryKeyType}`]: pk,
             },

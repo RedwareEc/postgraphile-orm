@@ -41,8 +41,14 @@ export interface QueryOptions {
 
 export interface GraphqlModel {
   findAll: (find: FindOptions, options?: QueryOptions) => Promise<any>;
-  findOne: (find: FindOptions, options?: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
-  count: (find: FindOptions, options?: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
+  findOne: (
+    find?: Omit<FindOptions, 'first' | 'offset'>,
+    options?: Omit<QueryOptions, '_simpleList'>,
+  ) => Promise<any>;
+  count: (
+    find?: Omit<FindOptions, 'first' | 'offset' | 'orderBy'>,
+    options?: Omit<QueryOptions, '_simpleList'>,
+  ) => Promise<any>;
   findBy: (
     pks: Record<string, string | number>,
     options?: Omit<QueryOptions, '_simpleList'>,
@@ -59,7 +65,7 @@ export interface GraphqlModel {
     data: any,
     options?: Omit<QueryOptions, '_simpleList'>,
   ) => Promise<any>;
-  deleteByPk: (pk: string | number, options: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
+  deleteByPk: (pk: string | number, options?: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
   deleteBy: (
     pks: Record<string, string | number>,
     options?: Omit<QueryOptions, '_simpleList'>,
