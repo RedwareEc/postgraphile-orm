@@ -34,7 +34,13 @@ export interface FindOptions {
 }
 export interface QueryOptions {
   variables?: Record<string, any>;
+  /**
+   * Select name fragment
+   */
   nameFragment?: string;
+  /**
+   * Evorride fragment
+   */
   fragment?: string;
   simpleList?: boolean;
 }
@@ -47,28 +53,28 @@ export interface GraphqlModel {
   ) => Promise<any>;
   count: (
     find?: Omit<FindOptions, 'first' | 'offset' | 'orderBy'>,
-    options?: Omit<QueryOptions, '_simpleList'>,
+    options?: Omit<QueryOptions, 'simpleList'>,
   ) => Promise<any>;
   findBy: (
     pks: Record<string, string | number>,
-    options?: Omit<QueryOptions, '_simpleList'>,
+    options?: Omit<QueryOptions, 'simpleList'>,
   ) => Promise<any>;
-  findByPk: (pk: string | number, options?: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
-  create: (data: any, options?: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
+  findByPk: (pk: string | number, options?: Omit<QueryOptions, 'simpleList'>) => Promise<any>;
+  create: (data: any, options?: Omit<QueryOptions, 'simpleList'>) => Promise<any>;
   updateByPk: (
     pk: string | number,
     data: any,
-    options?: Omit<QueryOptions, '_simpleList'>,
+    options?: Omit<QueryOptions, 'simpleList'>,
   ) => Promise<any>;
   updateBy: (
     pks: Record<string, string | number>,
     data: any,
-    options?: Omit<QueryOptions, '_simpleList'>,
+    options?: Omit<QueryOptions, 'simpleList'>,
   ) => Promise<any>;
-  deleteByPk: (pk: string | number, options?: Omit<QueryOptions, '_simpleList'>) => Promise<any>;
+  deleteByPk: (pk: string | number, options?: Omit<QueryOptions, 'simpleList'>) => Promise<any>;
   deleteBy: (
     pks: Record<string, string | number>,
-    options?: Omit<QueryOptions, '_simpleList'>,
+    options?: Omit<QueryOptions, 'simpleList'>,
   ) => Promise<any>;
   $request: (query: any, variables: anyi) => Promise<any>;
   $addFragment: (
