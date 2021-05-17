@@ -20,6 +20,7 @@ interface Ctx {
   primaryKey: string;
 }
 
+export { gql } from 'graphql-request';
 const addFragment = ({ model, names }: Pick<Ctx, 'model' | 'names'>) => (
   nameFragment: string,
   fragment: { query: string; variables?: Record<string, string> },
